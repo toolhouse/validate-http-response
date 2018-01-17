@@ -27,7 +27,7 @@ func main() {
 		exitWithError("Configuration issue", err)
 	}
 
-	output, err := checkReadiness(c.URL)
+	output, err := checkUrl(c.URL)
 	if err != nil {
 		exitWithError("Error fetching deployment manifest", err)
 	}

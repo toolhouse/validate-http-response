@@ -22,7 +22,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func checkReadiness(url string) (string, error) {
+func checkUrl(url string) (string, error) {
 	res, err := http.Get(url)
 
 	if res.StatusCode < 200 || res.StatusCode > 299 {
