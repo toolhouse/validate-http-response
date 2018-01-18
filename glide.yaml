@@ -1,5 +1,11 @@
-package: github.com/toolhouse/verify-toolhouse-monitoring
+package: github.com/toolhouse/verify-url
 import:
 - package: github.com/hashicorp/go-multierror
 - package: github.com/pkg/errors
   version: ^0.8.0
+- package: github.com/xeipuuv/gojsonschema
+- package: gopkg.in/urfave/cli.v2
+  version: ^1.20.0
+- package: gopkg.in/urfave/cli.v1
+  version: ^1.20.0
+- package: github.com/xeipuuv/gojsonreference

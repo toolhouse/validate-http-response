@@ -1,3 +1,4 @@
 vendor/
 verify-url
+verify-url-darwin_amd64
 verify-url-linux_amd64

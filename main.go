@@ -19,24 +19,127 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"path/filepath"
+	"strings"
+
+	"gopkg.in/urfave/cli.v1"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 func main() {
-	c, err := configFromEnv()
-	if err != nil {
-		exitWithError("Configuration issue", err)
+	var url string
+	var code string
+	var method string
+	var schemaFilename string
+	var headersFilename string
+	var bodyFilename string
+	var silent bool
+
+	app := cli.NewApp()
+	app.Name = "verify-url"
+	app.Usage = "Basic testing for URL responses"
+	app.UsageText = "verify-url [options] [URL]";
+	app.Version = "1.0.0";
+	app.Flags = []cli.Flag {
+		cli.StringFlag{
+			Name: "code, c",
+			Value: "200",
+			Usage: "The expected HTTP status code. Defaults to 200.",
+			Destination: &code,
+		},
+		cli.StringFlag{
+			Name: "method, m",
+			Value: "GET",
+			Usage: "The HTTP method to use when calling the URL. Defaults to 'GET'.",
+			Destination: &method,
+		},
+		cli.StringFlag{
+			Name: "schema, sch",
+			Usage: "`FILE` used to load JSON schema for response verification",
+			Destination: &schemaFilename,
+		},
+		cli.StringFlag{
+			Name: "headers, hd",
+			Usage: "`FILE` containing headers to send to URL",
+			Destination: &headersFilename,
+		},
+		cli.StringFlag{
+			Name: "body, b",
+			Usage: "`FILE` containing body content to send to URL",
+			Destination: &bodyFilename,
+		},
+		cli.BoolFlag{
+			Name: "silent, s",
+			Usage: "If specified, nothing will be printed to stdout",
+			Destination: &silent,
+		},
 	}
 
-	output, err := checkUrl(c.URL)
-	if err != nil {
-		exitWithError("Error fetching deployment manifest", err)
+	app.Action = func(c *cli.Context) error {
+		url = c.Args().Get(0)
+		if url == "" {
+			return HandleError("URL is required.", silent)
+		}
+
+		schemaFilename, err := filepath.Abs(schemaFilename)
+		bodyFilename, err := filepath.Abs(bodyFilename)
+		if err != nil {
+			return HandleError("Could not use provided schema or body file name", silent)
+		}
+
+		schemaFilename = URIFromPath(schemaFilename)
+		bodyFilename = URIFromPath(bodyFilename)
+
+		parsedCode, err := strconv.ParseInt(code, 0, 0)
+		if err != nil {
+			return HandleError("Could not parse the provided status code.", silent)
+		}
+
+		body, status, err := makeRequest(url)
+		if err != nil {
+			return HandleError(fmt.Sprintf("An error was encountered: \"%s\".", err.Error()), silent)
+		}
+
+		if status != int(parsedCode) {
+			return HandleError("Actual status code does not match expected status code.", silent)
+		}
+
+		if !silent {
+			fmt.Fprintf(os.Stdout, "%s", body)
+		}
+
+		if schemaFilename != "" {
+			loadedSchema := gojsonschema.NewReferenceLoader(schemaFilename)
+			loadedBody := gojsonschema.NewStringLoader(body)
+			result, err := gojsonschema.Validate(loadedSchema, loadedBody)
+			if err != nil {
+				return HandleError("Validation error: " + err.Error() + "\n", silent)
+			}
+
+			if !result.Valid() {
+				return HandleError("Response did not match the provided schema.", silent)
+			}
+		}
+
+		return nil;
 	}
 
-	fmt.Fprintf(os.Stdout, "Deployment verified. Output:\n%s\n", output)
-	os.Exit(0)
+	app.Run(os.Args)
 }
 
-func exitWithError(desc string, err error) {
-	fmt.Fprintf(os.Stderr, "%s: %s", desc, err.Error())
-	os.Exit(1)
+func HandleError(message string, silent bool) error {
+	if silent {
+		return cli.NewExitError("", 1)
+	}
+
+	return cli.NewExitError(message, 1)
+}
+
+func URIFromPath(path string) string {
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") || strings.HasPrefix(path, "file://") {
+		return path
+	}
+
+	return "file://" + path;
 }

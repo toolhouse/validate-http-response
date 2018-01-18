@@ -19,18 +19,16 @@ package main
 import (
 	"net/http"
 	"io/ioutil"
-	"github.com/pkg/errors"
 )
 
-func checkUrl(url string) (string, error) {
+func makeRequest(url string) (string, int, error) {
 	res, err := http.Get(url)
 
-	if res.StatusCode < 200 || res.StatusCode > 299 {
-		return "", errors.Errorf("Received non-200 HTTP status code: %s", res.Status)
+	if res.StatusCode > 199 || res.StatusCode < 300 {
+		body, err := ioutil.ReadAll(res.Body)
+		res.Body.Close()
+		return string(body), res.StatusCode, err
 	}
 
-	body, err := ioutil.ReadAll(res.Body)
-
-	res.Body.Close()
-	return string(body), err
+	return "", res.StatusCode, err
 }

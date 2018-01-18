@@ -8,6 +8,9 @@ VERSION := $(strip $(shell git describe --always --dirty))
 .PHONY: linux-amd64 docker-build docker-push update-ca help
 .DEFAULT_GOAL := help
 
+darwin-amd64:
+	docker run --env GOOS=darwin --env GOARCH=amd64 --env CGO_ENABLED=0 --rm -v "`pwd`":"/go/src/$(PKG)" -w /go/src/$(PKG) golang:$(GOVERSION) go build -a -tags netgo -ldflags '-w' -o verify-url-darwin_amd64
+
 linux-amd64:
 	docker run --env GOOS=linux --env GOARCH=amd64 --env CGO_ENABLED=0 --rm -v "`pwd`":"/go/src/$(PKG)" -w /go/src/$(PKG) golang:$(GOVERSION) go build -a -tags netgo -ldflags '-w' -o verify-url-linux_amd64
 

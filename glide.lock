@@ -1,10 +1,18 @@
-hash: c4637b40b5baace58e5dd8c51efe213ca2fb31aa324f3985610d9a1275dd48dc
-updated: 2017-05-09T12:30:42.357865532-07:00
+hash: 33a5f35a56af1735f1921a89d5d08acf01e904d98aba6a2c46fd372a14d8ab3e
+updated: 2018-01-17T16:39:21.06080598-08:00
 imports:
-- name: github.com/hashicorp/errwrap
-  version: 7554cd9344cec97297fa6649b055a8c98c2a1e55
 - name: github.com/hashicorp/go-multierror
   version: ed905158d87462226a13fe39ddf685ea65f1c11f
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/xeipuuv/gojsonpointer
+  version: 6fe8760cad3569743d51ddbb243b26f8456742dc
+- name: github.com/xeipuuv/gojsonreference
+  version: e02fc20de94c78484cd5ffb007f8af96be030a45
+- name: github.com/xeipuuv/gojsonschema
+  version: 511d08a359d14c0dd9c4302af52ee9abb6f93c2a
+- name: gopkg.in/urfave/cli.v1
+  version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
+- name: gopkg.in/urfave/cli.v2
+  version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
 testImports: []
