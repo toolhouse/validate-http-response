@@ -20,8 +20,3 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 WORKDIR /
 ADD ./verify-url-linux_amd64 /verify-url
 EXPOSE 80
-
-# The environment variables are used to configure the container at runtime:
-# ENV URL http://www.example.com/
-
-CMD ["/verify-url"]
