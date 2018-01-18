@@ -35,3 +35,9 @@ Run as part of a CI pipeline to test integration of changes and check for regres
 ```shell
 ./verify-url-darwin_amd64 --schema=validation/baz.json http://www.foo.bar/baz
 ```
+
+## Building
+
+Install dependencies: `glide install`
+
+Build: `make darwin-amd64` or `make linux-amd64`
