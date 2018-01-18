@@ -82,15 +82,6 @@ func main() {
 			return HandleError("URL is required.", silent)
 		}
 
-		schemaFilename, err := filepath.Abs(schemaFilename)
-		bodyFilename, err := filepath.Abs(bodyFilename)
-		if err != nil {
-			return HandleError("Could not use provided schema or body file name", silent)
-		}
-
-		schemaFilename = URIFromPath(schemaFilename)
-		bodyFilename = URIFromPath(bodyFilename)
-
 		parsedCode, err := strconv.ParseInt(code, 0, 0)
 		if err != nil {
 			return HandleError("Could not parse the provided status code.", silent)
@@ -110,6 +101,13 @@ func main() {
 		}
 
 		if schemaFilename != "" {
+			schemaFilename, err := filepath.Abs(schemaFilename)
+			if err != nil {
+				return HandleError("Could not use provided schema file name", silent)
+			}
+
+			schemaFilename = URIFromPath(schemaFilename)
+
 			loadedSchema := gojsonschema.NewReferenceLoader(schemaFilename)
 			loadedBody := gojsonschema.NewStringLoader(body)
 			result, err := gojsonschema.Validate(loadedSchema, loadedBody)
