@@ -79,31 +79,27 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		url = c.Args().Get(0)
 		if url == "" {
-			return HandleError("URL is required.", silent)
+			return HandleError("URL is required.\n", silent)
 		}
 
 		parsedCode, err := strconv.ParseInt(code, 0, 0)
 		if err != nil {
-			return HandleError("Could not parse the provided status code.", silent)
+			return HandleError("Could not parse the provided status code.\n", silent)
 		}
 
 		body, status, err := makeRequest(url)
 		if err != nil {
-			return HandleError(fmt.Sprintf("An error was encountered: \"%s\".", err.Error()), silent)
+			return HandleError(fmt.Sprintf("An error was encountered: \"%s\".\n", err.Error()), silent)
 		}
 
 		if status != int(parsedCode) {
-			return HandleError("Actual status code does not match expected status code.", silent)
-		}
-
-		if !silent {
-			fmt.Fprintf(os.Stdout, "%s", body)
+			return HandleError("Actual status code does not match expected status code.\n", silent)
 		}
 
 		if schemaFilename != "" {
 			schemaFilename, err := filepath.Abs(schemaFilename)
 			if err != nil {
-				return HandleError("Could not use provided schema file name", silent)
+				return HandleError("Could not use provided schema file name.\n", silent)
 			}
 
 			schemaFilename = URIFromPath(schemaFilename)
@@ -116,8 +112,12 @@ func main() {
 			}
 
 			if !result.Valid() {
-				return HandleError("Response did not match the provided schema.", silent)
+				return HandleError("Response did not match the provided schema.\n", silent)
 			}
+		}
+
+		if !silent {
+			fmt.Fprintf(os.Stdout, "%s\n", body)
 		}
 
 		return nil;

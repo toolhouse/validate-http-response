@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM toolhouse/verify-deployment-manifest:v0.2.0
 MAINTAINER Kevin Stock <kevin@toolhouse.com>
 
 # SSL CA Root Certs
