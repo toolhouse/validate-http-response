@@ -17,18 +17,28 @@ limitations under the License.
 package main
 
 import (
+	"bytes"
 	"net/http"
 	"io/ioutil"
 )
 
-func makeRequest(url string) (string, int, error) {
-	res, err := http.Get(url)
-
-	if res.StatusCode > 199 || res.StatusCode < 300 {
-		body, err := ioutil.ReadAll(res.Body)
-		res.Body.Close()
-		return string(body), res.StatusCode, err
+func makeRequest(method string, url string, headers map[string]string, body []byte) (string, int, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
+	if err != nil {
+		return "", 400, err
 	}
 
-	return "", res.StatusCode, err
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		return "", 0, err
+	}
+	defer res.Body.Close()
+
+	resBody, err := ioutil.ReadAll(res.Body)
+	return string(resBody), res.StatusCode, nil
 }

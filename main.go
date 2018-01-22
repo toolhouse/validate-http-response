@@ -17,10 +17,12 @@ limitations under the License.
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
-	"strconv"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"gopkg.in/urfave/cli.v1"
@@ -35,43 +37,45 @@ func main() {
 	var headersFilename string
 	var bodyFilename string
 	var silent bool
+	var headersData map[string]string
+	var bodyBytes []byte
 
 	app := cli.NewApp()
 	app.Name = "verify-url"
 	app.Usage = "Basic testing for URL responses"
-	app.UsageText = "verify-url [options] [URL]";
-	app.Version = "1.0.0";
-	app.Flags = []cli.Flag {
+	app.UsageText = "verify-url [options] [URL]"
+	app.Version = "1.0.0"
+	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name: "code, c",
-			Value: "200",
-			Usage: "The expected HTTP status code. Defaults to 200.",
+			Name:        "code, c",
+			Value:       "200",
+			Usage:       "The expected HTTP status code. Defaults to 200.",
 			Destination: &code,
 		},
 		cli.StringFlag{
-			Name: "method, m",
-			Value: "GET",
-			Usage: "The HTTP method to use when calling the URL. Defaults to 'GET'.",
+			Name:        "method, m",
+			Value:       "GET",
+			Usage:       "The HTTP method to use when calling the URL. Defaults to 'GET'.",
 			Destination: &method,
 		},
 		cli.StringFlag{
-			Name: "schema, sch",
-			Usage: "`FILE` used to load JSON schema for response verification",
+			Name:        "schema, sch",
+			Usage:       "`FILE` used to load JSON schema for response verification",
 			Destination: &schemaFilename,
 		},
 		cli.StringFlag{
-			Name: "headers, hd",
-			Usage: "`FILE` containing headers to send to URL",
+			Name:        "headers, hd",
+			Usage:       "`FILE` containing headers to send to URL",
 			Destination: &headersFilename,
 		},
 		cli.StringFlag{
-			Name: "body, b",
-			Usage: "`FILE` containing body content to send to URL",
+			Name:        "body, b",
+			Usage:       "`FILE` containing body content to send to URL",
 			Destination: &bodyFilename,
 		},
 		cli.BoolFlag{
-			Name: "silent, s",
-			Usage: "If specified, nothing will be printed to stdout",
+			Name:        "silent, s",
+			Usage:       "If specified, nothing will be printed to stdout",
 			Destination: &silent,
 		},
 	}
@@ -87,13 +91,32 @@ func main() {
 			return HandleError("Could not parse the provided status code.\n", silent)
 		}
 
-		body, status, err := makeRequest(url)
+		if headersFilename != "" {
+			headersBytes, err := ioutil.ReadFile(headersFilename)
+			if err != nil {
+				return HandleError("Could not read the provided headers file.\n", silent)
+			}
+
+			err = json.Unmarshal(headersBytes, &headersData)
+			if err != nil {
+				return HandleError("Could not deserialize headers.\n", silent)
+			}
+		}
+
+		if bodyFilename != "" {
+			bodyBytes, err = ioutil.ReadFile(bodyFilename)
+			if err != nil {
+				return HandleError("Could not read the provided body file.\n", silent)
+			}
+		}
+
+		body, status, err := makeRequest(method, url, headersData, bodyBytes)
 		if err != nil {
 			return HandleError(fmt.Sprintf("An error was encountered: \"%s\".\n", err.Error()), silent)
 		}
 
 		if status != int(parsedCode) {
-			return HandleError("Actual status code does not match expected status code.\n", silent)
+			return HandleError(fmt.Sprintf("Actual status code (%d) does not match expected status code (%d).\n", status, int(parsedCode)), silent)
 		}
 
 		if schemaFilename != "" {
@@ -108,7 +131,7 @@ func main() {
 			loadedBody := gojsonschema.NewStringLoader(body)
 			result, err := gojsonschema.Validate(loadedSchema, loadedBody)
 			if err != nil {
-				return HandleError("Validation error: " + err.Error() + "\n", silent)
+				return HandleError("Validation error: "+err.Error()+"\n", silent)
 			}
 
 			if !result.Valid() {
@@ -120,7 +143,7 @@ func main() {
 			fmt.Fprintf(os.Stdout, "%s\n", body)
 		}
 
-		return nil;
+		return nil
 	}
 
 	app.Run(os.Args)
@@ -139,5 +162,5 @@ func URIFromPath(path string) string {
 		return path
 	}
 
-	return "file://" + path;
+	return "file://" + path
 }

@@ -10,7 +10,7 @@ USAGE:
    verify-url [options] [URL]
 
 VERSION:
-   1.0.0
+   0.4.0
 
 COMMANDS:
      help, h  Shows a list of commands or help for one command
