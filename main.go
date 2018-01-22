@@ -44,7 +44,7 @@ func main() {
 	app.Name = "verify-url"
 	app.Usage = "Basic testing for URL responses"
 	app.UsageText = "verify-url [options] [URL]"
-	app.Version = "1.0.0"
+	app.Version = "0.4.0"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "code, c",
