@@ -18,20 +18,20 @@ package main
 
 import (
 	"bytes"
-	"net/http"
 	"io/ioutil"
+	"net/http"
 )
 
 type Request struct {
-	method string
-	url string
+	method  string
+	url     string
 	headers map[string]string
-	body []byte
+	body    []byte
 }
 
 type Response struct {
 	statusCode int
-	body string
+	body       string
 }
 
 func makeRequest(req Request) (Response, error) {

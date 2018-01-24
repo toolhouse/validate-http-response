@@ -21,12 +21,12 @@ import (
 )
 
 type Args struct {
-	code uint
-	method string
-	schemaFilename string
+	code            uint
+	method          string
+	schemaFilename  string
 	headersFilename string
-	bodyFilename string
-	silent bool
+	bodyFilename    string
+	silent          bool
 }
 
 func setupCli(app *cli.App) *Args {
@@ -70,6 +70,6 @@ func setupCli(app *cli.App) *Args {
 			Destination: &info.silent,
 		},
 	}
-	
+
 	return &info
 }

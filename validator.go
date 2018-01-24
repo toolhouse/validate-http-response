@@ -76,10 +76,10 @@ func (v Validator) MakeRequest(url string) (Response, error) {
 	}
 
 	res, err := makeRequest(Request{
-		method: v.args.method,
-		url: url,
+		method:  v.args.method,
+		url:     url,
 		headers: headers,
-		body: body,
+		body:    body,
 	})
 	if err != nil {
 		return Response{}, v.HandleError(fmt.Sprintf(HTTP_REQUEST_ERROR, err.Error()))
