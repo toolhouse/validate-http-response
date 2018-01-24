@@ -52,5 +52,9 @@ func makeRequest(req Request) (Response, error) {
 	defer httpRes.Body.Close()
 
 	body, err := ioutil.ReadAll(httpRes.Body)
+	if err != nil {
+		return Response{}, err
+	}
+
 	return Response{statusCode: httpRes.StatusCode, body: string(body)}, nil
 }
