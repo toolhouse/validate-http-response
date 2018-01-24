@@ -22,6 +22,7 @@ import (
 	"net/http"
 )
 
+// Request contains information needed to construct an HTTP request
 type Request struct {
 	method  string
 	url     string
@@ -29,6 +30,7 @@ type Request struct {
 	body    []byte
 }
 
+// Response contains pertinent information from an HTTP response
 type Response struct {
 	statusCode int
 	body       string

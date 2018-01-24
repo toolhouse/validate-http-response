@@ -20,6 +20,7 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
+// Args contains a set of command line arguments
 type Args struct {
 	code            uint
 	method          string
@@ -29,13 +30,13 @@ type Args struct {
 	silent          bool
 }
 
-func setupCli(app *cli.App) *Args {
+func setupCli(app *cli.App, version string) *Args {
 	info := Args{}
 
 	app.Name = "validate-http-response"
 	app.Usage = "Basic testing for HTTP responses"
 	app.UsageText = "validate-http-response [options] [URL]"
-	app.Version = "0.5.0"
+	app.Version = version
 	app.Flags = []cli.Flag{
 		cli.UintFlag{
 			Name:        "code",

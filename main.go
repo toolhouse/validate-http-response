@@ -22,9 +22,12 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
+// Version contains the current application version
+const Version = "0.5.0"
+
 func main() {
 	app := cli.NewApp()
-	args := setupCli(app)
+	args := setupCli(app, Version)
 	app.Action = func(c *cli.Context) error {
 		validator := Validator{args: args}
 		err := validator.Run(c.Args().Get(0))
