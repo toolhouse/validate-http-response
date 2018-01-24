@@ -1,4 +1,4 @@
 vendor/
-verify-url
-verify-url-darwin_amd64
-verify-url-linux_amd64
+validate-http-response
+validate-http-response-darwin_amd64
+validate-http-response-linux_amd64

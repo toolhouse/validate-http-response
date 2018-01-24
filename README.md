@@ -1,13 +1,13 @@
-# Verify URL
+# Validate HTTP Response
 
-[![Version](https://badge.fury.io/gh/toolhouse%2Fverify-url.svg)](https://github.com/toolhouse/verify-url/releases) [![Go Report Card](https://goreportcard.com/badge/github.com/toolhouse/verify-url)](https://goreportcard.com/report/github.com/toolhouse/verify-url) [![codebeat badge](https://codebeat.co/badges/4c4cc430-53ea-4022-a05a-dd9e34534940)](https://codebeat.co/projects/github-com-toolhouse-verify-url-master) [![](https://images.microbadger.com/badges/image/toolhouse/verify-url.svg)](https://microbadger.com/images/toolhouse/verify-url "Docker Image") [![license](https://img.shields.io/github/license/toolhouse/verify-url.svg)](https://github.com/toolhouse/verify-url/blob/master/LICENSE)
+[![Version](https://badge.fury.io/gh/toolhouse%2Fvalidate-http-response.svg)](https://github.com/toolhouse/validate-http-response/releases) [![Go Report Card](https://goreportcard.com/badge/github.com/toolhouse/validate-http-response)](https://goreportcard.com/report/github.com/toolhouse/validate-http-response) [![codebeat badge](https://codebeat.co/badges/4c4cc430-53ea-4022-a05a-dd9e34534940)](https://codebeat.co/projects/github-com-toolhouse-validate-http-response-master) [![](https://images.microbadger.com/badges/image/toolhouse/validate-http-response.svg)](https://microbadger.com/images/toolhouse/validate-http-response "Docker Image") [![license](https://img.shields.io/github/license/toolhouse/validate-http-response.svg)](https://github.com/toolhouse/validate-http-response/blob/master/LICENSE)
 
 ```
 NAME:
-   verify-url - Basic testing for URL responses
+   validate-http-response - Basic testing for HTTP responses
 
 USAGE:
-   verify-url [options] [URL]
+   validate-http-response [options] [URL]
 
 VERSION:
    0.4.0
@@ -33,7 +33,7 @@ Run as part of a CI pipeline to test integration of changes and check for regres
 ### Example
 
 ```shell
-./verify-url-darwin_amd64 --schema=validation/baz.json http://www.foo.bar/baz
+./validate-http-response-darwin_amd64 --schema=validation/baz.json http://www.foo.bar/baz
 ```
 
 ## Building

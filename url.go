@@ -22,23 +22,35 @@ import (
 	"io/ioutil"
 )
 
-func makeRequest(method string, url string, headers map[string]string, body []byte) (string, int, error) {
+type Request struct {
+	method string
+	url string
+	headers map[string]string
+	body []byte
+}
+
+type Response struct {
+	statusCode int
+	body string
+}
+
+func makeRequest(req Request) (Response, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
+	httpReq, err := http.NewRequest(req.method, req.url, bytes.NewBuffer(req.body))
 	if err != nil {
-		return "", 400, err
+		return Response{}, err
 	}
 
-	for key, value := range headers {
-		req.Header.Set(key, value)
+	for key, value := range req.headers {
+		httpReq.Header.Set(key, value)
 	}
 
-	res, err := client.Do(req)
+	httpRes, err := client.Do(httpReq)
 	if err != nil {
-		return "", 0, err
+		return Response{}, err
 	}
-	defer res.Body.Close()
+	defer httpRes.Body.Close()
 
-	resBody, err := ioutil.ReadAll(res.Body)
-	return string(resBody), res.StatusCode, nil
+	body, err := ioutil.ReadAll(httpRes.Body)
+	return Response{statusCode: httpRes.StatusCode, body: string(body)}, nil
 }
