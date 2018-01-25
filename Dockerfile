@@ -18,5 +18,5 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 WORKDIR /
-ADD ./verify-url-linux_amd64 /verify-url
+ADD ./validate-http-response-linux_amd64 /validate-http-response
 EXPOSE 80
