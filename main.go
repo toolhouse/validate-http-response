@@ -23,7 +23,7 @@ import (
 )
 
 // Version contains the current application version
-const Version = "0.5.0"
+const Version = "0.6.0"
 
 func main() {
 	app := cli.NewApp()

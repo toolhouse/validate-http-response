@@ -10,20 +10,20 @@ USAGE:
    validate-http-response [options] [URL]
 
 VERSION:
-   0.4.0
+   0.6.0
 
 COMMANDS:
      help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --code value, -c value     The expected HTTP status code. Defaults to 200. (default: "200")
-   --method value, -m value   The HTTP method to use when calling the URL. Defaults to 'GET'. (default: "GET")
-   --schema FILE, --sch FILE  FILE used to load JSON schema for response verification
-   --headers FILE, --hd FILE  FILE containing headers to send to URL
-   --body FILE, -b FILE       FILE containing body content to send to URL
-   --silent, -s               If specified, nothing will be printed to stdout
-   --help, -h                 show help
-   --version, -v              print the version
+   --code value    The expected HTTP status code. Defaults to 200. (default: 200)
+   --method value  The HTTP method to use when calling the URL. Defaults to 'GET'. (default: "GET")
+   --schema FILE   FILE used to load JSON schema for response verification
+   --headers FILE  FILE containing headers to send to URL
+   --body FILE     FILE containing body content to send to URL
+   --silent        If specified, nothing will be printed to stdout
+   --help, -h      show help
+   --version, -v   print the version
 ```
 
 ## Why?
